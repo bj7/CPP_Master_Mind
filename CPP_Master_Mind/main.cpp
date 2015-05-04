@@ -7,12 +7,19 @@
 //
 
 #include <iostream>
+using namespace std;
 #include "OrganismClass.h"
+#include "debug.h"
 
 int main(int argc, const char * argv[]) {
     // insert code here...
     Organism organism = *new Organism(4);
+    debug_array(organism);
     
-    std::cout << organism.get_fitness();
+    organism.set_fitness(5);
+
+    organism.set_genome();
+    debug_array(organism);
+    
     return 0;
 }

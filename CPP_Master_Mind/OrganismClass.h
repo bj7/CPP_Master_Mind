@@ -19,13 +19,19 @@
 class Organism {
 private:
     int fitness;
-    int genome[];
+    int *genome;
+    int size;
+    void generate_genome(int[], int size);
     
 public:
     bool set_fitness(int n);
     int get_fitness();
+    void set_genome();
+    int* get_genome();
+    int get_size();
     
     Organism(int size); //default constructor
+    
 };
 
 #endif

@@ -7,12 +7,14 @@
 //
 
 #include "OrganismClass.h"
+#include <stdlib.h>
 /**
  * Default constructor for class
  */
 Organism::Organism(int size) {
     this->fitness = 0;
-    this->genome[size] = {};
+    this->size = size;
+    this->genome = new int[size];
 }
 
 int Organism::get_fitness() {
@@ -26,3 +28,22 @@ bool Organism::set_fitness(int n) {
         return false;
     }
 }
+
+void Organism::set_genome() {
+    generate_genome(this->genome, this->size);
+}
+
+int* Organism::get_genome() {
+    return this->genome;
+}
+
+void Organism::generate_genome(int genome[], int size) {
+    for (int i = 0; i < size; i++) {
+        genome[i] = rand() % 6 + 1;
+    }
+}
+
+int Organism::get_size() {
+    return this->size;
+}
+
