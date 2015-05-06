@@ -12,13 +12,13 @@
 #include <stdio.h>
 #include "OrganismClass.h"
 
-void debug_array(Organism);
-
 #endif /* defined(__CPP_Master_Mind__debug__) */
 
 #ifndef DEBUG_H
 #define DEBUG_H
 #include "OrganismClass.h"
 void debug_organism(Organism);
+
+void print_array(int[], int size);
 
 #endif

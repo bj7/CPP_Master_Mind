@@ -8,6 +8,7 @@
 
 #include "OrganismClass.h"
 #include <stdlib.h>
+#include <time.h>
 /**
  * Default constructor for class
  */
@@ -38,6 +39,7 @@ int* Organism::get_genome() {
 }
 
 void Organism::generate_genome(int genome[], int size) {
+    srand(time(NULL));
     for (int i = 0; i < size; i++) {
         genome[i] = rand() % 6 + 1;
     }
