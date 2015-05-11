@@ -32,6 +32,10 @@ public:
     
     Organism(int size); //default constructor
     
+    Organism(int size, int *genome); //secondary constructor for specifying beginning genome
+    
+    
+    
 };
 
 #endif

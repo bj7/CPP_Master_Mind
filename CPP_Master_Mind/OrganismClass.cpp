@@ -18,6 +18,12 @@ Organism::Organism(int size) {
     this->genome = new int[size];
 }
 
+Organism::Organism(int size, int *genome) {
+    this->fitness = 0;
+    this->size = size;
+    this->genome = genome;
+}
+
 int Organism::get_fitness() {
     return this->fitness;
 }

@@ -9,14 +9,17 @@
 #include <iostream>
 using namespace std;
 #include "OrganismClass.h"
-#include "debug.h"
+#include "utilities.h"
 
 int secret[4] = {1, 2, 4, 6};
 
+/** 
+ * this struct serves no purpose other than as some code I was playing with
 struct {
 	int array[1] = {};
 	int *size = &array[-1];
 } prev_fittest;
+ */
 
 void fitness_test_helper(Organism*);
 int fitness_test(int[], int size);
@@ -24,16 +27,15 @@ int contains(int, int[], int);
 
 int main(int argc, const char * argv[]) {
     // insert code here...
-    Organism organism = *new Organism(4);
 	
-	organism.set_genome();
+	int genome[] = {1,2,3,4};
+    Organism organism = *new Organism(4, genome);
+	
+	//organism.set_genome();
 	debug_organism(organism);
 	
 	fitness_test_helper(&organism);
 	debug_organism(organism);
-	
-	*prev_fittest.size = 6;
-	cout << &prev_fittest.size << ":" << *prev_fittest.size;
     
     return 0;
 }
