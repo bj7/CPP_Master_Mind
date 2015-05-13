@@ -7,11 +7,13 @@
 //
 
 #include <iostream>
+#include <vector>
 using namespace std;
 #include "OrganismClass.h"
 #include "utilities.h"
+//#include "utilities.cpp"
 
-int secret[4] = {1, 2, 4, 6};
+int secret[4] = {1, 2, 4, 6}; //fitness of six is the best
 
 /** 
  * this struct serves no purpose other than as some code I was playing with
@@ -21,22 +23,66 @@ struct {
 } prev_fittest;
  */
 
+//function definitions for main usage
 void fitness_test_helper(Organism*);
 int fitness_test(int[], int size);
 int contains(int, int[], int);
 
 int main(int argc, const char * argv[]) {
     // insert code here...
+	/*
+	 set up...
+	 */
+	//init random number key for use in genome generation
+	//best used if only run once at start of program (allows for best randomness)
+	srand(time(NULL));
 	
-	int genome[] = {1,2,3,4};
-    Organism organism = *new Organism(4, genome);
+	//create starting population container using classic arrays (for comparison on vectors)
+	//DON'T FORGET TO delete() the array at the end!
+	//Will not actually be using the pointer array. Will make use of vectors.
+	Organism **start_population = new Organism*[300];
+	int genome[] = {1,2,3,4};	//Initializing new genome. According to *site_paper*
+								//using a random set of numbers from 1-4 provides the best
+								//chance at guessing the sercret code.
 	
-	//organism.set_genome();
-	debug_organism(organism);
+	vector<Organism*> start_pop (300); //initializing vector to an array of pointers
 	
-	fitness_test_helper(&organism);
-	debug_organism(organism);
-    
+	Organism *prime = new Organism(4, genome); //create first organism using constructor
+	fitness_test_helper(prime); //get fitness of our base model
+	
+	/*
+	 generate starting population...
+	 */
+	for (int i = 0; i < 300; i++) {
+		//simple usage of arrays of pointers
+		start_population[i] = new Organism(4);
+		start_population[i]->set_genome();
+		
+		//here is the actual vector that is used
+		start_pop[i] = new Organism(4); //create new organism in our vector
+		start_pop[i]->set_genome();
+	}
+	
+	/*
+	 population evolution...
+	 */
+	for (int i = 0; i < 300; i++) {
+		//test against prime
+	}
+	
+	/*
+	 Clean up the array of pointers we created because we don't need it.
+	 */
+	//we need to iterate through the array deleting all the pointers
+	for (int i = 0; i < 300; i++) {
+		delete start_population[i];
+	}
+	//now delete the array
+	delete [] start_population; //cleaning up heap
+	
+	/*
+	 Exit
+	 */
     return 0;
 }
 

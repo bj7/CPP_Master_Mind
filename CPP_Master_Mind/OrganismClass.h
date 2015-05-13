@@ -29,10 +29,11 @@ public:
     void set_genome();
     int* get_genome();
     int get_size();
-    
-    Organism(int size); //default constructor
-    
+
+    Organism(); //default constructor
+    Organism(int size); //constructor
     Organism(int size, int *genome); //secondary constructor for specifying beginning genome
+    ~Organism(); //destructor
     
     
     

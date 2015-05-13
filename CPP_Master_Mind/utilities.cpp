@@ -19,11 +19,11 @@ void print_array(T array[], int size) {
     cout << "]";
 }
 
-void debug_organism(Organism organism) {
-    cout << "size: " << organism.get_size() << " array dump: ";
-    for (int i = 0; i < organism.get_size(); i++) {
-        cout << organism.get_genome()[i];
+void debug_organism(Organism *organism) {
+    cout << "size: " << organism->get_size() << " array dump: ";
+    for (int i = 0; i < organism->get_size(); i++) {
+        cout << organism->get_genome()[i];
     }
     cout << " ";
-    cout << "fitness: " << organism.get_fitness() << endl;
+    cout << "fitness: " << organism->get_fitness() << endl;
 }

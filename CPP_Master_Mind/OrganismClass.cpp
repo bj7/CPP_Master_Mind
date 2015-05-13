@@ -9,9 +9,18 @@
 #include "OrganismClass.h"
 #include <stdlib.h>
 #include <time.h>
+#include <iostream>
+using namespace std;
+
 /**
  * Default constructor for class
  */
+Organism::Organism() {
+    this->fitness = 0;
+    this->size = 0;
+    this->genome = NULL;
+}
+
 Organism::Organism(int size) {
     this->fitness = 0;
     this->size = size;
@@ -21,7 +30,18 @@ Organism::Organism(int size) {
 Organism::Organism(int size, int *genome) {
     this->fitness = 0;
     this->size = size;
-    this->genome = genome;
+    this->genome = new int[size];
+    
+    for (int i = 0; i < size; i++) {
+        this->genome[i] = genome[i];
+    }
+}
+
+Organism::~Organism() {
+    cout << "Deleting this: " << this << endl;
+    if (this->genome != NULL) {
+         delete [] this->genome;
+    }
 }
 
 int Organism::get_fitness() {
@@ -45,7 +65,8 @@ int* Organism::get_genome() {
 }
 
 void Organism::generate_genome(int genome[], int size) {
-    srand(time(NULL));
+    //srand(time(NULL)); *this here causes the same random number due to
+    //execution speed
     for (int i = 0; i < size; i++) {
         genome[i] = rand() % 6 + 1;
     }

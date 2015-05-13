@@ -14,5 +14,5 @@
 template <class T>
 void print_array(T[], int);
 
-void debug_organism(Organism);
+void debug_organism(Organism*);
 #endif /* defined(__CPP_Array_Lib__utilities__) */
