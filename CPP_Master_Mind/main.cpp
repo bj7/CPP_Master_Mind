@@ -10,10 +10,14 @@
 #include <vector>
 using namespace std;
 #include "OrganismClass.h"
-#include "utilities.h"
-//#include "utilities.cpp"
+//#include "utilities.h"
+#include "utilities.cpp"
 
+//Defining secret code to guess. Potentially create driver for true testing.
 int secret[4] = {1, 2, 4, 6}; //fitness of six is the best
+
+//define array to hold previous fittest guesses
+vector<Organism*> previous_fittest(0);
 
 /** 
  * this struct serves no purpose other than as some code I was playing with
@@ -23,10 +27,12 @@ struct {
 } prev_fittest;
  */
 
-//function definitions for main usage
-void fitness_test_helper(Organism*);
+//========= Function definitions for genetic algorithm and helpers ==========//
+void fitness_test_helper(Organism*, bool psudo = false);
 int fitness_test(int[], int size);
 int contains(int, int[], int);
+void debug_organism(Organism*);
+int psudo_fitness_test(int genome[], int size);
 
 int main(int argc, const char * argv[]) {
     // insert code here...
@@ -49,7 +55,7 @@ int main(int argc, const char * argv[]) {
 	
 	Organism *prime = new Organism(4, genome); //create first organism using constructor
 	fitness_test_helper(prime); //get fitness of our base model
-	
+	previous_fittest.push_back(prime);
 	/*
 	 generate starting population...
 	 */
@@ -66,8 +72,14 @@ int main(int argc, const char * argv[]) {
 	/*
 	 population evolution...
 	 */
-	for (int i = 0; i < 300; i++) {
-		//test against prime
+	bool flag = true;
+	while (flag) {
+		//test population against previous fittest
+		for (int i = 0; i < start_pop.size(); i++) {
+			fitness_test_helper(start_pop[i], true);
+			debug_organism(start_pop[i]);
+		}
+		flag = false;
 	}
 	
 	/*
@@ -86,18 +98,29 @@ int main(int argc, const char * argv[]) {
     return 0;
 }
 
+//============ Genetic algorithm functions and helpers implementations ==========//
+
 /**
  * API function for fitness test of organism allowing for simpler call.
  * Hides details of implementing the fitness test.
+ * Optional boolean argument 'mode' for defining if it callse psudo test or real test
  * @param Organism* - Organism class instance
  * @return void
  */
-void fitness_test_helper(Organism *organism) {
-	int genome[organism->get_size()];
-	for (int i = 0; i < organism->get_size(); i++) {
-		genome[i] = organism->get_genome()[i];
+void fitness_test_helper(Organism *organism, bool psudo) {
+	if (psudo == false) { // if is false, then just do normal fitness test
+		int genome[organism->get_size()];
+		for (int i = 0; i < organism->get_size(); i++) {
+			genome[i] = organism->get_genome()[i];
+		}
+		organism->set_fitness(fitness_test(genome, organism->get_size()));
+	} else { //else true, use psudo_fitness_test()
+		int genome[organism->get_size()];
+		for (int i = 0; i < organism->get_size(); i++) {
+			genome[i] = organism->get_genome()[i];
+		}
+		organism->set_fitness(psudo_fitness_test(genome, organism->get_size()));
 	}
-	organism->set_fitness(fitness_test(genome, organism->get_size()));
 }
 
 /**
@@ -134,4 +157,44 @@ int contains(int test_val, int array[], int size) {
 		}
 	}
 	return count;
+}
+
+/**
+ * Psudo fitness test function. Does not test against actual secret code but rather against 
+ * all the 'top' organisms of the past to get an averaged top fitness.
+ */
+int psudo_fitness_test(int genome[], int size) {
+	int fitness = 0;
+	//outter loop to iterate over all previous guesses
+	for(int i = 0; i < previous_fittest.size(); i++) {
+		//inner loops to test the individual genomes
+		
+		//testing if genomes have identical parts
+		for (int j = 0; j < size; j++) {
+			if (previous_fittest[i]->get_genome()[j] == genome[j]) {
+				fitness++;
+			}
+		}
+		//testing if the genomes at least contain the same parts
+		for (int k = 0; k < size; k++) {
+			fitness += contains(genome[k], previous_fittest[i]->get_genome(), size);
+		}
+	}
+	
+	//take the average of the fitness
+	fitness = fitness / previous_fittest.size();
+	
+	return fitness;
+}
+
+/**
+ * Function accepts pointer to Organism object and prints the guts of the class.
+ */
+void debug_organism(Organism *organism) {
+	cout << "size: " << organism->get_size() << " array dump: ";
+	for (int i = 0; i < organism->get_size(); i++) {
+		cout << organism->get_genome()[i];
+	}
+	cout << " ";
+	cout << "fitness: " << organism->get_fitness() << endl;
 }

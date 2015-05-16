@@ -38,7 +38,7 @@ Organism::Organism(int size, int *genome) {
 }
 
 Organism::~Organism() {
-    cout << "Deleting this: " << this << endl;
+    //cout << "Deleting this: " << this << endl;
     if (this->genome != NULL) {
          delete [] this->genome;
     }

@@ -10,9 +10,8 @@
 #define __CPP_Array_Lib__utilities__
 
 #include <stdio.h>
-#include "OrganismClass.h"
+//#include "OrganismClass.h"
 template <class T>
-void print_array(T[], int);
+void my_print_array(T*, int);
 
-void debug_organism(Organism*);
 #endif /* defined(__CPP_Array_Lib__utilities__) */
