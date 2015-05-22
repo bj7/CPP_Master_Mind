@@ -8,13 +8,14 @@
 
 #include <iostream>
 #include <vector>
+#include <cstdlib>
 using namespace std;
 #include "OrganismClass.h"
 //#include "utilities.h"
 #include "utilities.cpp"
 
 //Defining secret code to guess. Potentially create driver for true testing.
-int secret[4] = {1, 2, 4, 6}; //fitness of six is the best
+int secret[4] = {0}; //fitness of six is the best
 
 //define array to hold previous fittest guesses
 vector<Organism*> previous_fittest(0);
@@ -36,12 +37,28 @@ int psudo_fitness_test(int genome[], int size);
 
 int main(int argc, const char * argv[]) {
     // insert code here...
+	
 	/*
 	 set up...
 	 */
 	//init random number key for use in genome generation
 	//best used if only run once at start of program (allows for best randomness)
 	srand(time(NULL));
+	
+	/*
+	 brief error check for proper arguments
+	 */
+	if (argc < 5) {
+		cout << "Error: not an appropriate argument. argc=" << argc << endl;
+		exit(-1);
+	}
+	//get initial code from command line
+	int j = 0; //set as counter for secret
+	for (int i = 1; i < argc; i++) {
+		secret[j] =  atoi(argv[i]); //convert to int from command line arguments
+		j++;
+	}
+	my_print_array(secret, 4); cout << endl;
 	
 	//create starting population container using classic arrays (for comparison on vectors)
 	//DON'T FORGET TO delete() the array at the end!
