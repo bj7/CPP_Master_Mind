@@ -15,7 +15,7 @@ using namespace std;
 #include "utilities.cpp"
 
 //Defining secret code to guess. Potentially create driver for true testing.
-int secret[4] = {0}; //fitness of six is the best
+int secret[4] = {1, 2, 3, 4}; //fitness of six is the best
 
 //define array to hold previous fittest guesses
 vector<Organism*> previous_fittest(0);
@@ -34,6 +34,7 @@ int fitness_test(int[], int size);
 int contains(int, int[], int);
 void debug_organism(Organism*);
 int psudo_fitness_test(int genome[], int size);
+Organism* reproduce(Organism, Organism);
 
 int main(int argc, const char * argv[]) {
     // insert code here...
@@ -47,16 +48,17 @@ int main(int argc, const char * argv[]) {
 	
 	/*
 	 brief error check for proper arguments
+	 if none, use default code
 	 */
 	if (argc < 5) {
-		cout << "Error: not an appropriate argument. argc=" << argc << endl;
-		exit(-1);
-	}
-	//get initial code from command line
-	int j = 0; //set as counter for secret
-	for (int i = 1; i < argc; i++) {
-		secret[j] =  atoi(argv[i]); //convert to int from command line arguments
-		j++;
+		//do nothing, secret has been initialized
+	} else {
+		//get initial code from command line
+		int j = 0; //set as counter for secret
+		for (int i = 1; i < argc; i++) {
+			secret[j] =  atoi(argv[i]); //convert to int from command line arguments
+			j++;
+		}
 	}
 	my_print_array(secret, 4); cout << endl;
 	
@@ -73,6 +75,7 @@ int main(int argc, const char * argv[]) {
 	Organism *prime = new Organism(4, genome); //create first organism using constructor
 	fitness_test_helper(prime); //get fitness of our base model
 	previous_fittest.push_back(prime);
+	
 	/*
 	 generate starting population...
 	 */
@@ -89,13 +92,45 @@ int main(int argc, const char * argv[]) {
 	/*
 	 population evolution...
 	 */
+	int threshold = 3; //fitness threshold for who can reproduce
 	bool flag = true;
 	while (flag) {
 		//test population against previous fittest
 		for (int i = 0; i < start_pop.size(); i++) {
 			fitness_test_helper(start_pop[i], true);
-			debug_organism(start_pop[i]);
+			//debug_organism(start_pop[i]);
 		}
+		
+		/*
+		 Determine who can reproduce
+		 */
+		vector<Organism*> reproduceable (0);
+		for (int i = 0; i < start_pop.size(); i++) {
+			if (start_pop[i]->get_fitness() > threshold) {
+				reproduceable.push_back(start_pop[i]);
+			}
+		}
+		/*
+		 Now reproduce...
+		 */
+		vector<Organism*> offspring (0);
+		for (int i = 0; i < reproduceable.size(); i++) {
+			if (i + 1 < reproduceable.size()) {
+				offspring.push_back(reproduce(*reproduceable[i], *reproduceable[i+1]));
+			} else {
+				offspring.push_back(reproduce(*reproduceable[0], *reproduceable[i]));
+			}
+		}
+		
+		Organism *current_fittest = start_pop[0];
+		for (int i = 1; i < start_pop.size(); i++) {
+			if (current_fittest->get_fitness() <= start_pop[i]->get_fitness()) {
+				current_fittest = start_pop[i];
+			}
+		}
+		cout << endl;
+		debug_organism(current_fittest);
+		
 		flag = false;
 	}
 	
@@ -214,4 +249,33 @@ void debug_organism(Organism *organism) {
 	}
 	cout << " ";
 	cout << "fitness: " << organism->get_fitness() << endl;
+}
+
+/**
+ * Function that takes two organisms, determines a random split in their genome on which to
+ * build the offspring, then mutates a random point in the genome in 2% of the population.
+ * Returns new child organism.
+ */
+Organism* reproduce(Organism a, Organism b) {
+	int genome[4];
+	
+	//randomly decide on where to split parent genomes
+	int split = rand() % 5;
+	for (int i = 0; i < a.get_size(); i++) {
+		if (i < split) {
+			genome[i] = a.get_genome()[i];
+		} else {
+			genome[i] = b.get_genome()[i];
+		}
+	}
+	//now cause random mutation in 2% of the population
+	if ((rand() % 100 + 1) <= 2) {
+		int rand_index = rand() % 5;
+		int mutation = rand() % 6 + 1;
+		
+		genome[rand_index] = mutation;
+	}
+	
+	Organism *child = new Organism(4, genome); //need to add genome
+	return child;
 }
