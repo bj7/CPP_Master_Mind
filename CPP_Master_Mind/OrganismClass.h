@@ -34,6 +34,7 @@ public:
     Organism(int size); //constructor
     Organism(int size, int *genome); //secondary constructor for specifying beginning genome
     ~Organism(); //destructor
+    Organism(const Organism& a); //copy constructor
     
     
     

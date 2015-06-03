@@ -21,12 +21,18 @@ Organism::Organism() {
     this->genome = NULL;
 }
 
+/**
+ * Constructor to take in a predefined genome size
+ */
 Organism::Organism(int size) {
     this->fitness = 0;
     this->size = size;
     this->genome = new int[size];
 }
 
+/**
+ * Constructor to take in predefined size and genome
+ */
 Organism::Organism(int size, int *genome) {
     this->fitness = 0;
     this->size = size;
@@ -37,10 +43,26 @@ Organism::Organism(int size, int *genome) {
     }
 }
 
+/**
+ * Destructor
+ */
 Organism::~Organism() {
     //cout << "Deleting this: " << this << endl;
     if (this->genome != NULL) {
          delete [] this->genome;
+    }
+}
+
+
+/**
+ * Copy constructor to ensure proper object copying
+ */
+Organism::Organism(const Organism& a) {
+    this->fitness = a.fitness;
+    this->size = a.size;
+    this->genome = new int[this->size];
+    for (int i = 0; i < this->size; i++) {
+        this->genome[i] = a.genome[i];
     }
 }
 
