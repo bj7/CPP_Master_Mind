@@ -15,7 +15,7 @@ using namespace std;
 #include "utilities.cpp"
 
 //Defining secret code to guess. Potentially create driver for true testing.
-int secret[4] = {1, 2, 3, 4}; //fitness of six is the best
+int secret[4] = {1, 2, 3, 6}; //fitness of six is the best
 
 //define array to hold previous fittest guesses
 vector<Organism*> previous_fittest(0);
@@ -93,16 +93,16 @@ int main(int argc, const char * argv[]) {
 	 population evolution...
 	 */
 	int threshold = 3; //fitness threshold for who can reproduce
-	bool flag = true;
+	bool flag = true; //loop stopping flag
 	while (flag) {
 		//test population against previous fittest
 		for (int i = 0; i < start_pop.size(); i++) {
-			fitness_test_helper(start_pop[i], true);
+			fitness_test_helper(start_pop[i], true); //use psudo test
 			//debug_organism(start_pop[i]);
 		}
 		
 		/*
-		 Determine who can reproduce
+		 Determine who can reproduce based on threshol
 		 */
 		vector<Organism*> reproduceable (0);
 		for (int i = 0; i < start_pop.size(); i++) {
@@ -122,6 +122,7 @@ int main(int argc, const char * argv[]) {
 			}
 		}
 		
+		//determine fittest individual of parent population
 		Organism *current_fittest = start_pop[0];
 		for (int i = 1; i < start_pop.size(); i++) {
 			if (current_fittest->get_fitness() <= start_pop[i]->get_fitness()) {
@@ -129,9 +130,27 @@ int main(int argc, const char * argv[]) {
 			}
 		}
 		cout << endl;
+		//debug_organism(current_fittest);
+		
+		//actually test it's fitness against our secret code
+		fitness_test_helper(current_fittest);
 		debug_organism(current_fittest);
 		
-		flag = false;
+		//push parent fittest into our previous list
+		previous_fittest[0] = current_fittest;
+		
+		//determine fitness of children
+		for (int i = 0; i < offspring.size(); i++) {
+			fitness_test_helper(offspring[i], true);
+		}
+		
+		//copy start population to hold new generation of offspring
+		start_pop = offspring;
+		
+		//test if our current fittest had a fitness of 8 because that is the solution
+		if (current_fittest->get_fitness() >= 8) {
+			flag = false;
+		}
 	}
 	
 	/*
