@@ -5,6 +5,14 @@
 //  Created by Joshua Bernitt on 5/4/15.
 //  Copyright (c) 2015 Joshua Bernitt. All rights reserved.
 //
+//	This algorithm and its implementation draws inspiration from and relies on the explanations given in
+//
+//	Efficient solutions for Mastermind using genetic algorithms
+//	Lotte Berghman, Dries Goossens, Roel Leus∗ ORSTAT, K.U.Leuven, Naamsestraat 69, 3000 Leuven, Belgium
+//	https://lirias.kuleuven.be/bitstream/123456789/184247/2/Mastermind
+//
+//	This algorithm utilizes the tactics and lessons gleaned in the above paper.
+//
 
 #include <iostream>
 #include <vector>
@@ -66,7 +74,7 @@ int main(int argc, const char * argv[]) {
 	//DON'T FORGET TO delete() the array at the end!
 	//Will not actually be using the pointer array. Will make use of vectors.
 	Organism **start_population = new Organism*[300];
-	int genome[] = {1,2,3,4};	//Initializing new genome. According to *site_paper*
+	int genome[] = {1,2,3,4};	//Initializing new genome. According to the paper
 								//using a random set of numbers from 1-4 provides the best
 								//chance at guessing the sercret code.
 	
@@ -94,6 +102,7 @@ int main(int argc, const char * argv[]) {
 	 */
 	int threshold = 3; //fitness threshold for who can reproduce
 	bool flag = true; //loop stopping flag
+	int iterations = 0;
 	while (flag) {
 		//test population against previous fittest
 		for (int i = 0; i < start_pop.size(); i++) {
@@ -149,6 +158,12 @@ int main(int argc, const char * argv[]) {
 		
 		//test if our current fittest had a fitness of 8 because that is the solution
 		if (current_fittest->get_fitness() >= 8) {
+			flag = false;
+		}
+		
+		//test if population is unviable (iterations > 300) if so kill
+		iterations++;
+		if (iterations > 300) {
 			flag = false;
 		}
 	}
