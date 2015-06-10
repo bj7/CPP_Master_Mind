@@ -161,6 +161,13 @@ int main(int argc, const char * argv[]) {
 			flag = false;
 		}
 		
+		//push parents to fill child population since child population won't be full
+		int i = (int)offspring.size();
+		while (i < 300) {
+			offspring.push_back(start_pop[i]);
+			i++;
+		}
+		
 		//test if population is unviable (iterations > 300) if so kill
 		iterations++;
 		if (iterations > 300) {
