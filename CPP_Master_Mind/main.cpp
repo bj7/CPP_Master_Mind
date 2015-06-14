@@ -100,7 +100,7 @@ int main(int argc, const char * argv[]) {
 	/*
 	 population evolution...
 	 */
-	int threshold = 3; //fitness threshold for who can reproduce
+	int threshold = 6; //fitness threshold for who can reproduce
 	bool flag = true; //loop stopping flag
 	int iterations = 0;
 	while (flag) {
@@ -141,6 +141,7 @@ int main(int argc, const char * argv[]) {
 		cout << endl;
 		//debug_organism(current_fittest);
 		
+		
 		//actually test it's fitness against our secret code
 		fitness_test_helper(current_fittest);
 		debug_organism(current_fittest);
@@ -168,10 +169,10 @@ int main(int argc, const char * argv[]) {
 			i++;
 		}
 		
-		//test if population is unviable (iterations > 300) if so kill
+		//test if population is unviable, if so kill
 		iterations++;
-		if (iterations > 300) {
-			flag = false;
+		if (iterations > 10) {
+			//flag = false;
 		}
 	}
 	
